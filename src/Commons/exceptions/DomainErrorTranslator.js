@@ -17,6 +17,11 @@ DomainErrorTranslator._directories = {
   'REFRESH_AUTHENTICATION_USE_CASE.PAYLOAD_NOT_MEET_DATA_TYPE_SPECIFICATION': new InvariantError('refresh token must be a string'),
   'DELETE_AUTHENTICATION_USE_CASE.NOT_CONTAIN_REFRESH_TOKEN': new InvariantError('refresh token must be provided'),
   'DELETE_AUTHENTICATION_USE_CASE.PAYLOAD_NOT_MEET_DATA_TYPE_SPECIFICATION': new InvariantError('refresh token must be a string'),
+  'THREAD.NOT_CONTAIN_NEEDED_PROPERTY': new InvariantError('cannot create a new thread because required properties are missing'),
+  'THREAD.NOT_MEET_DATA_TYPE_SPECIFICATION': new InvariantError('cannot create a new thread because the data types are incorrect'),
+  'COMMENT.NOT_CONTAIN_NEEDED_PROPERTY': new InvariantError('cannot create a new comment because required properties are missing'),
+  'COMMENT.NOT_MEET_DATA_TYPE_SPECIFICATION': new InvariantError('cannot create a new comment because the data types are incorrect'),
+
 };
 
 
