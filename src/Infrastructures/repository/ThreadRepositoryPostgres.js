@@ -1,6 +1,6 @@
 const InvariantError = require('../../Commons/exceptions/InvariantError');
 const ThreadRepository = require('../../Domains/threads/ThreadRepository');
-const Thread = require('../../Domains/threads/entities/Thread');
+const NewThread = require('../../Domains/threads/entities/NewThread');
 
 class ThreadRepositoryPostgres extends ThreadRepository {
     constructor(pool, idGenerator) {
@@ -10,13 +10,34 @@ class ThreadRepositoryPostgres extends ThreadRepository {
     }
 
     async createThread(thread) {
-        const { title, body } = thread;
+        const { title, body, userId } = thread;
         const id = `thread-${this._idGenerator()}`;
 
         const query = {
-            text: 'INSERT INTO threads VALUES ($1, $2, $3, $4, $5, $6)'
+            text: 'INSERT INTO threads VALUES ($1, $2, $3, $4) RETURNING *',
+            values: [id, title, body, userId],
         }
 
+        const result = await this._pool.query(query);
+
+        return new NewThread({ ...result.rows[0] });
 
     }
+
+    async getThreadById(id) {
+        const query = {
+            text: 'SELECT * FROM threads WHERE id = $1',
+            values: [id],
+        }
+
+        const result = await this._pool.query(query);
+
+        if (!result.rows.length) {
+            throw new InvariantError("NewThread not found");
+        }
+
+        return new NewThread({ ...result.rows[0] });
+    }
 }
+
+module.exports = ThreadRepositoryPostgres;

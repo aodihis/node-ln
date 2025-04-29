@@ -1,22 +1,15 @@
 class Thread {
-    constructor(payload, userId) {
-        this._verifyPayload(payload);
-        const { title, body } = payload;
+    constructor(data) {
+        const { id, title, body, created_at, owner_username, comments } = data;
 
+        this.id = id;
         this.title = title;
         this.body = body;
-        this.userId = userId;
+        this.date = created_at;
+        this.username = owner_username;
+        this.comments = comments;
     }
-
-    _verifyPayload({ title, body }) {
-        if (!title || !body) {
-            throw new Error('THREAD.NOT_CONTAIN_NEEDED_PROPERTY')
-        }
-
-        if (typeof title !== 'string' || typeof body !== 'string' ) {
-            throw new Error('THREAD.NOT_MEET_DATA_TYPE_SPECIFICATION');
-        }
-    }
+// No need to run validation since the data will come from database, and might allowed to have null value in future.    
 }
 
 module.exports = Thread;
