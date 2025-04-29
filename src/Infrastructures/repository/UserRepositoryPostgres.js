@@ -6,7 +6,7 @@ class UserRepositoryPostgres extends UserRepository {
   constructor(pool, idGenerator) {
     super();
     this._pool = pool;
-    this._idGenerator = idGenerator;
+    this._idGenerator_idGenerator = idGenerator;
   }
 
   async verifyAvailableUsername(username) {

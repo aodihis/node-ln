@@ -1,8 +1,11 @@
 class Comment {
-    constructor(payload) {
+    constructor(payload, threadId, userId) {
+        this._verifyPayload(payload);
         const { content } = payload;
 
         this.content = content;
+        this.threadId = threadId;
+        this.userId = userId;
     }
 
     _verifyPayload({ content }) {

@@ -1,9 +1,11 @@
 class Thread {
-    constructor(payload) {
+    constructor(payload, userId) {
+        this._verifyPayload(payload);
         const { title, body } = payload;
 
         this.title = title;
         this.body = body;
+        this.userId = userId;
     }
 
     _verifyPayload({ title, body }) {
