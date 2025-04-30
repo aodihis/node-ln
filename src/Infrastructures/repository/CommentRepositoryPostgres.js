@@ -32,6 +32,8 @@ class CommentRepositoryPostgres extends CommentRepository {
         if (!result.rows.length) {
             throw new InvariantError("No comments found.");
         }
+
+        return result.rows[0].id;
     }
 
     async getCommentsForThread(threadId) {
