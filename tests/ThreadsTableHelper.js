@@ -3,17 +3,6 @@ const pool = require('../src/Infrastructures/database/postgres/pool');
 const OWNER_ID = "user-1234"
 const ThreadsTableTestHelper = {
 
-    async addUser({
-                      id = OWNER_ID, username = 'test',
-                      password = 'secret', fullname = 'Test',
-                  }) {
-        const query = {
-            text: 'INSERT INTO users VALUES($1, $2, $3, $4)',
-            values: [id, username, password, fullname],
-        };
-        await pool.query(query);
-    },
-
     async addThread({
                   id = 'thread-123', title = "Test", body = "Test content",
                   owner = OWNER_ID,

@@ -1,15 +1,15 @@
 class NewComment {
     constructor(data) {
         this._verifyPayload(data);
-        const { content, threadId, userId } = data;
+        const { content, threadId, owner } = data;
 
         this.content = content;
         this.threadId = threadId;
-        this.userId = userId;
+        this.owner = owner;
     }
 
     _verifyPayload({ content }) {
-        //validate content only, no need for threadId and userId.
+        //validate content only, no need for threadId and owner.
         if (!content) {
             throw new Error('COMMENT.NOT_CONTAIN_NEEDED_PROPERTY')
         }

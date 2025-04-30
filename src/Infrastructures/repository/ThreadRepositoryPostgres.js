@@ -1,6 +1,6 @@
 const InvariantError = require('../../Commons/exceptions/InvariantError');
 const ThreadRepository = require('../../Domains/threads/ThreadRepository');
-const NewThread = require('../../Domains/threads/entities/NewThread');
+const AddedThread = require('../../Domains/threads/entities/AddedThread');
 const Thread = require('../../Domains/threads/entities/Thread');
 
 class ThreadRepositoryPostgres extends ThreadRepository {
@@ -21,7 +21,7 @@ class ThreadRepositoryPostgres extends ThreadRepository {
 
         const result = await this._pool.query(query);
 
-        return new NewThread({ ...result.rows[0] });
+        return new AddedThread({ ...result.rows[0] });
 
     }
 
@@ -36,33 +36,12 @@ class ThreadRepositoryPostgres extends ThreadRepository {
             values: [id],
         };
 
-        const thres = await this._pool.query(query);
-        const threadRows = thres.rows;
-        if (!threadRows.length) {
+        const threads = await this._pool.query(query);
+
+        if (!threads.rows.length) {
             throw new InvariantError("NewThread not found");
         }
-
-        const commentsQuery = {
-            text: `
-                SELECT comments.id as id, users.username as username, comments.created_at as date, comments.content as content
-                FROM comments
-                LEFT JOIN users ON comments.owner = users.id
-                WHERE comments.thread_id = $1
-            `,
-            values: [id],
-        };
-
-        const comments = await this._pool.query(commentsQuery);
-        const thread = {
-            id: threadRows[0].id,
-            title: threadRows[0].title,
-            body: threadRows[0].body,
-            date: threadRows[0].date,
-            username: threadRows[0].username,
-            comments: comments.rows,
-        }
-
-        return new Thread(thread);
+        return threads.rows[0];
     }
 }
 

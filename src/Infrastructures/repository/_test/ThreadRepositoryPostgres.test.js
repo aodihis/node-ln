@@ -1,12 +1,15 @@
 const ThreadsTableHelper = require('../../../../tests/ThreadsTableHelper');
+const UsersTableTestHelper = require('../../../../tests/UsersTableTestHelper');
 const pool = require('../../database/postgres/pool');
 const ThreadRepositoryPostgres = require('../ThreadRepositoryPostgres');
-const NewThread = require('../../../Domains/threads/entities/NewThread');
-const Thread = require('../../../Domains/threads/entities/Thread');
+const AddedThread = require('../../../Domains/threads/entities/AddedThread');
+const NewThread = require("../../../Domains/threads/entities/NewThread");
+
 
 describe('UserRepositoryPostgres', () => {
     afterEach(async () => {
         await ThreadsTableHelper.cleanTable();
+        await UsersTableTestHelper.cleanTable();
     });
 
     afterAll(async () => {
@@ -19,7 +22,7 @@ describe('UserRepositoryPostgres', () => {
             const fakeIdGenerator = () => '1248946454';
             const threadRepoPostgres = new ThreadRepositoryPostgres(pool, fakeIdGenerator);
 
-            await ThreadsTableHelper.addUser({id: "user-6788765678" });
+            await UsersTableTestHelper.addUser({id: "user-6788765678" });
 
             const data = new NewThread({
                 title: "Test",
@@ -28,7 +31,11 @@ describe('UserRepositoryPostgres', () => {
             });
 
             const res = await threadRepoPostgres.createThread(data)
-            expect(res).toStrictEqual(data);
+            expect(res).toStrictEqual(new AddedThread({
+                title: "Test",
+                owner: "user-6788765678",
+                id: "thread-1248946454"
+            }));
 
             const threads = await ThreadsTableHelper.getThreadById('thread-1248946454');
             expect(threads).toHaveLength(1)
@@ -38,12 +45,16 @@ describe('UserRepositoryPostgres', () => {
     describe('create with id exist', () => {
         it('insert should be failed.', async () => {
 
-            await ThreadsTableHelper.addUser({});
-            await ThreadsTableHelper.addThread({});
+            await UsersTableTestHelper.addUser({
+                id: "user-6788765678",
+            });
+            await ThreadsTableHelper.addThread({
+                owner: "user-6788765678",
+            });
             const fakeIdGenerator = () => '123';
             const threadRepoPostgres = new ThreadRepositoryPostgres(pool, fakeIdGenerator);
 
-            const data = new NewThread({
+            const data = new AddedThread({
                 title: "Test",
                 body: "Test body",
                 owner: "user-6788765678",
@@ -66,7 +77,7 @@ describe('UserRepositoryPostgres', () => {
     describe('test getThreadById', () => {
         it('should return value.', async () => {
 
-            await ThreadsTableHelper.addUser({
+            await UsersTableTestHelper.addUser({
                 id: 'user-6788765678',
                 username: "test"
             });
@@ -82,14 +93,13 @@ describe('UserRepositoryPostgres', () => {
 
             const res =  await threadRepoPostgres.getThreadById('thread-123');
 
-            expect(res).toStrictEqual(new Thread({
+            expect(res).toStrictEqual({
                 id: 'thread-123',
                 title: "Test",
                 body: "Test body",
                 date: res.date,
                 username: "test",
-                comments: []
-            }));
+            });
 
         })
     });
