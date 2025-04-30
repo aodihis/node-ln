@@ -19,11 +19,21 @@ const ThreadsTableTestHelper = {
                   owner = OWNER_ID,
               }) {
         const query = {
-            text: 'INSERT INTO users VALUES($1, $2, $3, $4)',
+            text: 'INSERT INTO threads VALUES($1, $2, $3, $4)',
             values: [id, title, body, owner],
         };
 
         await pool.query(query);
+    },
+
+    async getThreadById(id){
+        const query = {
+            text: 'SELECT * FROM threads WHERE id = $1',
+            values: [id],
+        };
+
+        const res = await pool.query(query);
+        return res.rows;
     },
 
     async cleanTable() {

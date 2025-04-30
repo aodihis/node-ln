@@ -11,12 +11,12 @@ class ThreadRepositoryPostgres extends ThreadRepository {
     }
 
     async createThread(thread) {
-        const { title, body, userId } = thread;
+        const { title, body, owner } = thread;
         const id = `thread-${this._idGenerator()}`;
 
         const query = {
             text: 'INSERT INTO threads VALUES ($1, $2, $3, $4) RETURNING *',
-            values: [id, title, body, userId],
+            values: [id, title, body, owner],
         }
 
         const result = await this._pool.query(query);
@@ -28,7 +28,7 @@ class ThreadRepositoryPostgres extends ThreadRepository {
     async getThreadById(id) {
         const query = {
             text: `
-                SELECT threads.id, threads.title, threads.body, threads.created_at, users.username
+                SELECT threads.id as id, threads.title as title, threads.body as body, threads.created_at as date, users.username as username
                 FROM threads
                 LEFT JOIN users ON threads.owner = users.id
                 WHERE threads.id = $1
@@ -36,9 +36,9 @@ class ThreadRepositoryPostgres extends ThreadRepository {
             values: [id],
         };
 
-        const threadRows = await this._pool.query(query);
-
-        if (!threadRows.rows.length) {
+        const thres = await this._pool.query(query);
+        const threadRows = thres.rows;
+        if (!threadRows.length) {
             throw new InvariantError("NewThread not found");
         }
 
@@ -57,9 +57,9 @@ class ThreadRepositoryPostgres extends ThreadRepository {
             id: threadRows[0].id,
             title: threadRows[0].title,
             body: threadRows[0].body,
-            date: threadRows[0].created_at,
+            date: threadRows[0].date,
             username: threadRows[0].username,
-            comments: comments,
+            comments: comments.rows,
         }
 
         return new Thread(thread);
