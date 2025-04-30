@@ -22,7 +22,7 @@ class ThreadsHandler {
       status: 'success',
       data: {addedThread}
     });
-    response.code(201);
+    res.code(201);
     return res;
   }
 

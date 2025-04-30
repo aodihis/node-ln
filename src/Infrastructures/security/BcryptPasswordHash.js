@@ -16,7 +16,7 @@ class BcryptPasswordHash extends EncryptionHelper {
     const result = await this._bcrypt.compare(password, hashedPassword);
 
     if (!result) {
-      throw new AuthenticationError('Invalid credentials');
+      throw new AuthenticationError('kredensial yang Anda masukkan salah');
     }
   }
 }

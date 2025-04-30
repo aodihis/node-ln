@@ -30,7 +30,7 @@ describe('UserRepositoryPostgres', () => {
                 owner: "user-6788765678",
             });
 
-            const res = await threadRepoPostgres.createThread(data)
+            const res = await threadRepoPostgres.create(data)
             expect(res).toStrictEqual(new AddedThread({
                 title: "Test",
                 owner: "user-6788765678",
@@ -60,7 +60,7 @@ describe('UserRepositoryPostgres', () => {
                 owner: "user-6788765678",
             });
 
-            await expect(threadRepoPostgres.createThread(data)).rejects.toThrow();
+            await expect(threadRepoPostgres.create(data)).rejects.toThrow();
 
         })
     });

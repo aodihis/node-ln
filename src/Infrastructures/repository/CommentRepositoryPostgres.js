@@ -1,4 +1,5 @@
 const InvariantError = require('../../Commons/exceptions/InvariantError');
+const NotFoundError = require('../../Commons/exceptions/NotFoundError');
 const AuthorizationError = require('../../Commons/exceptions/AuthorizationError');
 const CommentRepository = require('../../Domains/comments/CommentRepository');
 const AddedComment = require('../../Domains/comments/entities/AddedComment');
@@ -19,8 +20,15 @@ class CommentRepositoryPostgres extends CommentRepository {
             values: [id, content, threadId, owner],
         }
 
-        const result = await this._pool.query(query);
-        return new AddedComment({ ...result.rows[0] });
+        try {
+            const result = await this._pool.query(query);
+            return new AddedComment({ ...result.rows[0] });
+        } catch (error) {
+            if (error.code === '23503') { // foreign_key_violation
+                throw new NotFoundError(`Thread with ID ${threadId} not found`);
+            }
+            throw error;
+        }
     }
 
     async deleteComment(id) {
@@ -64,7 +72,7 @@ class CommentRepositoryPostgres extends CommentRepository {
         const result = await this._pool.query(query);
 
         if (!result.rows.length) {
-            throw new InvariantError("No comments found.");
+            throw new NotFoundError("No comments found.");
         }
         if (result.rows[0].owner !== owner) {
             throw new AuthorizationError("Not authorized to delete this comment");

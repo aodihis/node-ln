@@ -118,6 +118,7 @@ describe('UserRepositoryPostgres', () => {
                 id: "comment-123",
                 username: "test",
                 date: res[0].date,
+                is_deleted: false,
                 content: "Test comment",
             }])
 
