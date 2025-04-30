@@ -4,7 +4,8 @@ const ClientError = require('../../Commons/exceptions/ClientError');
 const DomainErrorTranslator = require('../../Commons/exceptions/DomainErrorTranslator');
 const users = require('../../Interfaces/http/api/users');
 const authentications = require('../../Interfaces/http/api/authentications');
-
+const threads = require('../../Interfaces/http/api/threads');
+const comments = require('../../Interfaces/http/api/comments');
 const createServer = async (container) => {
   const server = Hapi.server({
     host: process.env.HOST,
@@ -42,6 +43,14 @@ const createServer = async (container) => {
       plugin: authentications,
       options: { container },
     },
+    {
+      plugin: threads,
+      options: { container },
+    },
+    {
+      plugin: comments,
+      options: { container },
+    },
   ]);
 
   server.ext('onPreResponse', (request, h) => {
@@ -67,6 +76,7 @@ const createServer = async (container) => {
         return h.continue;
       }
 
+      console.error(translatedError);
       // penanganan server error sesuai kebutuhan
       const newResponse = h.response({
         status: 'error',

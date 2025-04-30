@@ -49,7 +49,7 @@ describe('/authentications endpoint', () => {
       expect(responseJson.data.refreshToken).toBeDefined();
     });
 
-    it('should response 400 if username not found', async () => {
+    it('should response 400 if username tidak tersedia', async () => {
       // Arrange
       const requestPayload = {
         username: 'dicoding',
@@ -223,7 +223,7 @@ describe('/authentications endpoint', () => {
       expect(responseJson.message).toEqual('refresh token harus string');
     });
 
-    it('should return 400 if refresh token not valid', async () => {
+    it('should return 400 if refresh token tidak valid', async () => {
       // Arrange
       const server = await createServer(container);
 
