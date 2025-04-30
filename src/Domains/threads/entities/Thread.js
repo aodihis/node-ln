@@ -7,7 +7,12 @@ class Thread {
         this.body = body;
         this.date = created_at;
         this.username = owner_username;
-        this.comments = comments;
+        this.comments = comments.map(comment => ({
+            id: comment.id,
+            username: comment.username,
+            date: comment.date,
+            content: comment.content ? comment.is_deleted === false : "**komentar telah dihapus**",
+        }));
     }
 // No need to run validation since the data will come from database, and might allowed to have null value in future.    
 }

@@ -6,6 +6,7 @@ const CommentRepositoryPostgres = require("../CommentRepositoryPostgres");
 const NewComment = require("../../../Domains/comments/entities/NewComment");
 const AddedComment = require("../../../Domains/comments/entities/AddedComment");
 const InvariantError = require('../../../Commons/exceptions/InvariantError');
+const AuthorizationError = require("../../../Commons/exceptions/AuthorizationError");
 
 
 describe('UserRepositoryPostgres', () => {
@@ -120,6 +121,32 @@ describe('UserRepositoryPostgres', () => {
                 content: "Test comment",
             }])
 
+        })
+    })
+
+    describe('test verifyCommentOwner', () => {
+        it('should correctly verify the owner.', async () => {
+            await UsersTableTestHelper.addUser({
+                id: "user-123",
+            })
+
+            await ThreadsTableHelper.addThread({
+                id: "thread-123",
+                owner: "user-123",
+            })
+
+            await CommentsTableHelper.addComment({
+                threadId: "thread-123", owner: "user-123", id: "comment-123",
+            })
+
+
+            const fakeIdGenerator = () => '1248946454';
+            const commentPostgres = new CommentRepositoryPostgres(pool, fakeIdGenerator);
+
+            await expect(commentPostgres.verifyCommentOwner("comment-123", "user-123")).resolves.not.toBeDefined();
+
+            await expect(commentPostgres.verifyCommentOwner("comment-123", "user-1234"))
+                .rejects.toBeInstanceOf(AuthorizationError);
         })
     })
 });

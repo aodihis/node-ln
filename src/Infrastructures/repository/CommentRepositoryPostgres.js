@@ -42,7 +42,8 @@ class CommentRepositoryPostgres extends CommentRepository {
 
         const commentsQuery = {
             text: `
-                SELECT comments.id as id, users.username as username, comments.created_at as date, comments.content as content
+                SELECT comments.id as id, users.username as username, comments.created_at as date, comments.content as content, 
+                comments.is_deleted as is_deleted
                 FROM comments
                 LEFT JOIN users ON comments.owner = users.id
                 WHERE comments.thread_id = $1
