@@ -5,8 +5,9 @@ class DeleteCommentUseCase {
         this._commentRepository = commentRepository;
     }
 
-    async execute(commentId) {
-        return this._commentRepository.deleteComment(commentId);
+    async execute(id, owner) {
+        this._commentRepository.verifyCommentOwner(id, owner)
+        return this._commentRepository.deleteComment(id);
     }
 }
 
