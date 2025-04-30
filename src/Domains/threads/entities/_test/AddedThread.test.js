@@ -2,6 +2,8 @@ const AddedThread = require('../AddedThread');
 
 describe('a AddedThread entities', () => {
     it('should create thread object correctly', () => {
+
+        const owner = "user-8787";
         // Arrange
         const data = {
             title: 'Test',

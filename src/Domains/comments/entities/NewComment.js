@@ -1,4 +1,4 @@
-class Comment {
+class NewComment {
     constructor(data) {
         this._verifyPayload(data);
         const { content, threadId, userId } = data;
@@ -9,6 +9,7 @@ class Comment {
     }
 
     _verifyPayload({ content }) {
+        //validate content only, no need for threadId and userId.
         if (!content) {
             throw new Error('COMMENT.NOT_CONTAIN_NEEDED_PROPERTY')
         }
@@ -19,4 +20,4 @@ class Comment {
     }
 }
 
-module.exports = Comment;
+module.exports = NewComment;
