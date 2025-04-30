@@ -7,6 +7,7 @@ const NewComment = require("../../../Domains/comments/entities/NewComment");
 const AddedComment = require("../../../Domains/comments/entities/AddedComment");
 const InvariantError = require('../../../Commons/exceptions/InvariantError');
 const AuthorizationError = require("../../../Commons/exceptions/AuthorizationError");
+const NotFoundError = require("../../../Commons/exceptions/NotFoundError");
 
 
 describe('UserRepositoryPostgres', () => {
@@ -18,6 +19,26 @@ describe('UserRepositoryPostgres', () => {
 
     afterAll(async () => {
         await pool.end();
+    });
+
+    describe('create with invalid threadId', () => {
+        it('should return not found.', async () => {
+
+            await UsersTableTestHelper.addUser({
+                id: "user-123",
+            })
+
+            const fakeIdGenerator = () => '1248946454';
+            const commentPostgres = new CommentRepositoryPostgres(pool, fakeIdGenerator);
+
+            const data = new NewComment({
+                content: "Test comment",
+                owner: "user-123",
+                threadId: "thread-123",
+            });
+
+            await expect(commentPostgres.create(data)).rejects.toBeInstanceOf(NotFoundError);
+        })
     });
 
     describe('verify create function', () => {
@@ -48,9 +69,19 @@ describe('UserRepositoryPostgres', () => {
                 owner: data.owner,
                 id: "comment-1248946454"
             }));
+
+            const commentActual = await CommentsTableHelper.getCommentById("comment-1248946454");
+            expect(commentActual).toEqual({
+                id: "comment-1248946454",
+                content: "Test comment",
+                thread_id: "thread-123",
+                owner: "user-123",
+                is_deleted: false,
+                created_at: expect.any(Date),
+                updated_at: expect.any(Date),
+            })
         })
     });
-
 
     describe('verify delete function', () => {
         it('should delete the data correctly.', async () => {
@@ -75,6 +106,9 @@ describe('UserRepositoryPostgres', () => {
 
             const check = await CommentsTableHelper.getCommentById("comment-123");
             expect(check.is_deleted).toEqual(true);
+
+            const commentActual = await CommentsTableHelper.getCommentById("comment-123");
+            expect(commentActual.is_deleted).toEqual(true)
         })
     })
 
@@ -150,4 +184,15 @@ describe('UserRepositoryPostgres', () => {
                 .rejects.toBeInstanceOf(AuthorizationError);
         })
     })
+
+    describe('test verifyCommentOwner with invalid id', () => {
+        it('should correctly verify the owner.', async () => {
+            const fakeIdGenerator = () => '1248946454';
+            const commentPostgres = new CommentRepositoryPostgres(pool, fakeIdGenerator);
+
+            await expect(commentPostgres.verifyCommentOwner("comment-123", "user-1234"))
+                .rejects.toBeInstanceOf(NotFoundError);
+        })
+    })
+
 });

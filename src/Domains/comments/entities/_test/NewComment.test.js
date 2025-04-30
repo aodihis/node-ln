@@ -1,13 +1,13 @@
-const Comment = require('../NewComment');
+const NewComment = require('../NewComment');
 
-describe('a Comment entities', () => {
+describe('a NewComment entities', () => {
     it('should throw error when payload did not contain needed property', () => {
 
         const payload = {
         };
 
         // Action and Assert
-        expect(() => new Comment(payload)).toThrowError('COMMENT.NOT_CONTAIN_NEEDED_PROPERTY');
+        expect(() => new NewComment(payload)).toThrowError('COMMENT.NOT_CONTAIN_NEEDED_PROPERTY');
     });
 
 
@@ -18,7 +18,7 @@ describe('a Comment entities', () => {
         };
 
         // Action and Assert
-        expect(() => new Comment(payload)).toThrowError('COMMENT.NOT_MEET_DATA_TYPE_SPECIFICATION');
+        expect(() => new NewComment(payload)).toThrowError('COMMENT.NOT_MEET_DATA_TYPE_SPECIFICATION');
     });
 
 
@@ -26,12 +26,16 @@ describe('a Comment entities', () => {
         // Arrange
         const payload = {
             content: 'test content',
+            threadId: 'thread-123',
+            owner: 'user-123'
         };
 
         // Action
-        const comment = new Comment(payload);
+        const comment = new NewComment(payload);
 
         // Assert
         expect(comment.content).toEqual(payload.content);
+        expect(comment.threadId).toEqual(payload.threadId);
+        expect(comment.owner).toEqual(payload.owner);
     });
 });

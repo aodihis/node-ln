@@ -34,5 +34,6 @@ describe('CreateThreadUseCase', () => {
 
         // Assert
         expect(mockThreadRepository.create).toHaveBeenCalledWith(useCasePayload);
+        expect(result).toEqual(mockAddedThread);
     });
 });

@@ -1,6 +1,7 @@
 const GetThreadUseCase = require('../GetThreadUseCase');
 const CommentRepository = require('../../../Domains/comments/CommentRepository');
 const ThreadRepository = require('../../../Domains/threads/ThreadRepository');
+const Thread = require("../../../Domains/threads/entities/Thread");
 
 
 describe('GetThreadUseCase', () => {
@@ -9,7 +10,15 @@ describe('GetThreadUseCase', () => {
         const threadId = "thread-1234";
 
         const mockComments = [
-            { id: "comment-1234", username: "user1", date: new Date(), content: "Test Comment 1"  },
+            { id: "comment-1234", username: "user1",
+                date: new Date(), content: "Test Comment 1",
+                is_deleted: false
+            },
+
+            { id: "comment-1235", username: "user1",
+                date: new Date(), content: "Test Comment 2",
+                is_deleted: true
+            },
         ];
 
         const mockThread = {
@@ -39,5 +48,12 @@ describe('GetThreadUseCase', () => {
         // Assert
         expect(mockThreadRepository.getThreadById).toHaveBeenCalledWith(threadId);
         expect(mockCommentRepository.getCommentsForThread).toHaveBeenCalledWith(threadId);
+
+        expect(result).toStrictEqual(
+            new Thread({
+                ...mockThread,
+                comments: mockComments,
+            })
+        )
     });
 });

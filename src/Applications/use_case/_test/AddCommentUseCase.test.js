@@ -34,5 +34,6 @@ describe('AddCommentUseCase', () => {
 
         // Assert
         expect(mockCommentRepository.create).toHaveBeenCalledWith(useCasePayload);
+        expect(result).toEqual(mockAddedComment)
     });
 });

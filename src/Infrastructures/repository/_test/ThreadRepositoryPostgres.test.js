@@ -4,7 +4,8 @@ const pool = require('../../database/postgres/pool');
 const ThreadRepositoryPostgres = require('../ThreadRepositoryPostgres');
 const AddedThread = require('../../../Domains/threads/entities/AddedThread');
 const NewThread = require("../../../Domains/threads/entities/NewThread");
-
+const InvariantError = require('../../../Commons/exceptions/InvariantError');
+const { DatabaseError } = require('pg');
 
 describe('UserRepositoryPostgres', () => {
     afterEach(async () => {
@@ -54,13 +55,19 @@ describe('UserRepositoryPostgres', () => {
             const fakeIdGenerator = () => '123';
             const threadRepoPostgres = new ThreadRepositoryPostgres(pool, fakeIdGenerator);
 
-            const data = new AddedThread({
+            const data = new NewThread({
                 title: "Test",
                 body: "Test body",
                 owner: "user-6788765678",
             });
 
-            await expect(threadRepoPostgres.create(data)).rejects.toThrow();
+            await threadRepoPostgres.create(data).catch((err) => {
+                expect(err).toBeInstanceOf(DatabaseError);
+                expect(err.code).toBe('23505');
+            });
+
+            const actual = await ThreadsTableHelper.getThreadById('thread-123');
+            expect(actual.length).toBe(1);
 
         })
     });
@@ -93,13 +100,15 @@ describe('UserRepositoryPostgres', () => {
 
             const res =  await threadRepoPostgres.getThreadById('thread-123');
 
-            expect(res).toStrictEqual({
-                id: 'thread-123',
-                title: "Test",
-                body: "Test body",
-                date: res.date,
-                username: "test",
-            });
+            expect(res).toStrictEqual(
+                {
+                    id: 'thread-123',
+                    title: "Test",
+                    body: "Test body",
+                    date: res.date,
+                    username: "test",
+                }
+            );
 
         })
     });

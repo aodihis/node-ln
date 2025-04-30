@@ -3,13 +3,24 @@ const Thread = require('../Thread');
 describe('a Thread entities', () => {
     it('should create thread object correctly', () => {
         // Arrange
+        const date = new Date();
         const data = {
             id: 'user-2134',
             title: 'Test',
             body: 'Test body',
-            date: new Date(),
+            date: date,
             username: 'test',
-            comments: []
+            comments: [
+                { id: "comment-1234", username: "user1",
+                    date: date, content: "Test Comment 1",
+                    is_deleted: false
+                },
+
+                { id: "comment-1235", username: "user1",
+                    date: date, content: "Test Comment 2",
+                    is_deleted: true
+                },
+            ]
         };
 
         // Action
@@ -21,6 +32,14 @@ describe('a Thread entities', () => {
         expect(thread.id).toEqual(data.id);
         expect(thread.username).toEqual(data.username);
         expect(thread.date).toEqual(data.date);
-        expect(thread.comments).toEqual(data.comments);
+        expect(thread.comments).toStrictEqual([
+            { id: "comment-1234", username: "user1",
+                date: date, content: "Test Comment 1",
+            },
+
+            { id: "comment-1235", username: "user1",
+                date: date, content: "**komentar telah dihapus**",
+            },
+        ]);
     });
 });
