@@ -1,4 +1,5 @@
 const InvariantError = require('../../Commons/exceptions/InvariantError');
+const AuthorizationError = require('../../Commons/exceptions/AuthorizationError');
 const CommentRepository = require('../../Domains/comments/CommentRepository');
 const AddedComment = require('../../Domains/comments/entities/AddedComment');
 const Thread = require('../../Domains/threads/entities/Thread');
@@ -24,9 +25,10 @@ class CommentRepositoryPostgres extends CommentRepository {
 
     async deleteComment(id) {
         const query = {
-            text: 'DELETE FROM comments WHERE id = $1 RETURNING id',
+            text: 'UPDATE comments SET is_deleted = true WHERE id = $1 RETURNING id',
             values: [id]
-        }
+        };
+
         const result = await this._pool.query(query);
 
         if (!result.rows.length) {
@@ -50,6 +52,22 @@ class CommentRepositoryPostgres extends CommentRepository {
 
         const comments = await this._pool.query(commentsQuery);
         return comments.rows;
+    }
+
+    async verifyCommentOwner(id, owner) {
+        const query = {
+            text: 'SELECT id, owner FROM comments WHERE id = $1',
+            values: [id]
+        }
+
+        const result = await this._pool.query(query);
+
+        if (!result.rows.length) {
+            throw new InvariantError("No comments found.");
+        }
+        if (result.rows[0].owner !== owner) {
+            throw new AuthorizationError("Not authorized to delete this comment");
+        }
     }
 }
 

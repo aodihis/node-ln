@@ -7,6 +7,7 @@ const NewComment = require("../../../Domains/comments/entities/NewComment");
 const AddedComment = require("../../../Domains/comments/entities/AddedComment");
 const InvariantError = require('../../../Commons/exceptions/InvariantError');
 
+
 describe('UserRepositoryPostgres', () => {
     afterEach(async () => {
         await CommentsTableHelper.cleanTable();
@@ -72,7 +73,7 @@ describe('UserRepositoryPostgres', () => {
             await commentPostgres.deleteComment("comment-123");
 
             const check = await CommentsTableHelper.getCommentById("comment-123");
-            expect(check).toHaveLength(0)
+            expect(check.is_deleted).toEqual(true);
         })
     })
 

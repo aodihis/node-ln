@@ -22,7 +22,7 @@ const CommentsTableHelper = {
         };
 
         const res = await pool.query(query);
-        return res.rows;
+        return res.rows[0];
     },
 
     async cleanTable() {
