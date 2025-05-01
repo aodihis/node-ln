@@ -76,7 +76,7 @@ describe('UserRepositoryPostgres', () => {
         it('insert should be failed.', async () => {
             const fakeIdGenerator = () => '123';
             const threadRepoPostgres = new ThreadRepositoryPostgres(pool, fakeIdGenerator);
-            await expect(threadRepoPostgres.getThreadById('thread-7978978798')).rejects.toThrow();
+            await expect(threadRepoPostgres.getThreadById('thread-7978978798')).rejects.toThrow(InvariantError);
 
         })
     });

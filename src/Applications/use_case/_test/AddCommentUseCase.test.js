@@ -23,7 +23,15 @@ describe('AddCommentUseCase', () => {
         const mockCommentRepository = new CommentRepository();
 
         mockCommentRepository.create = jest.fn()
-            .mockImplementation(() => Promise.resolve(mockAddedComment));
+            .mockImplementation(() => Promise.resolve(new AddedComment({
+                id: 'thread-123',
+                content: 'Sample Thread',
+                owner: 'user-123',
+                thread_id: 'thread-123',
+                is_deleted: false,
+                created_at: new Date(),
+                updated_at: new Date(),
+            })));
 
         const createCommentUseCase = new AddCommentUseCase({
             commentRepository: mockCommentRepository,

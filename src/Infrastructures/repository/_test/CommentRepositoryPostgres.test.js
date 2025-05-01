@@ -8,6 +8,7 @@ const AddedComment = require("../../../Domains/comments/entities/AddedComment");
 const InvariantError = require('../../../Commons/exceptions/InvariantError');
 const AuthorizationError = require("../../../Commons/exceptions/AuthorizationError");
 const NotFoundError = require("../../../Commons/exceptions/NotFoundError");
+const {DatabaseError} = require("pg");
 
 
 describe('UserRepositoryPostgres', () => {
@@ -38,6 +39,37 @@ describe('UserRepositoryPostgres', () => {
             });
 
             await expect(commentPostgres.create(data)).rejects.toBeInstanceOf(NotFoundError);
+        })
+    });
+
+    describe('create comment with duplicate id', () => {
+        it('should insert should throw an error.', async () => {
+
+            await UsersTableTestHelper.addUser({
+                id: "user-123",
+            })
+
+            await ThreadsTableHelper.addThread({
+                id: "thread-123",
+                owner: "user-123",
+            })
+
+            await CommentsTableHelper.addComment({id: "comment-123",
+            owner: "user-123", threadId: "thread-123",})
+
+            const fakeIdGenerator = () => '123';
+            const commentPostgres = new CommentRepositoryPostgres(pool, fakeIdGenerator);
+
+            const data = new NewComment({
+                content: "Test comment",
+                owner: "user-123",
+                threadId: "thread-123",
+            });
+
+            await commentPostgres.create(data).catch((err) => {
+                expect(err).toBeInstanceOf(DatabaseError);
+                expect(err.code).toBe('23505');
+            });
         })
     });
 
