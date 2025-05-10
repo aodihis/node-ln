@@ -15,6 +15,7 @@ const UserRepositoryPostgres = require('./repository/UserRepositoryPostgres');
 const BcryptPasswordHash = require('./security/BcryptPasswordHash');
 const ThreadRepository = require('../Domains/threads/ThreadRepository');
 const CommentRepository = require('../Domains/comments/CommentRepository');
+const CommentLikeRepository = require('../Domains/comment_likes/CommentLikeRepository');
 
 // use case
 const AddUserUseCase = require('../Applications/use_case/AddUserUseCase');
@@ -29,8 +30,10 @@ const CreateThreadUseCase = require('../Applications/use_case/CreateThreadUseCas
 const AddCommentUseCase = require('../Applications/use_case/AddCommentUseCase');
 const DeleteCommentUseCase = require('../Applications/use_case/DeleteCommentUseCase');
 const GetThreadUseCase = require('../Applications/use_case/GetThreadUseCase');
+const CommentLikeUseCase = require('../Applications/use_case/CommentLikeUseCase');
 const ThreadRepositoryPostgres = require("./repository/ThreadRepositoryPostgres");
 const CommentRepositoryPostgres = require("./repository/CommentRepositoryPostgres");
+const CommentLikeRepositoryPostgres = require("./repository/CommentLikeRepositoryPostgres");
 
 
 // creating container
@@ -109,6 +112,17 @@ container.register([
         },
         {
           concrete: nanoid,
+        },
+      ],
+    },
+  },
+  {
+    key: CommentLikeRepository.name,
+    Class: CommentLikeRepositoryPostgres,
+    parameter: {
+      dependencies: [
+        {
+          concrete: pool,
         },
       ],
     },
@@ -237,6 +251,23 @@ container.register([
         {
           name: 'threadRepository',
           internal: ThreadRepository.name,
+        },
+        {
+          name: 'commentRepository',
+          internal: CommentRepository.name,
+        },
+      ],
+    },
+  },
+  {
+    key: CommentLikeUseCase.name,
+    Class: CommentLikeUseCase,
+    parameter: {
+      injectType: 'destructuring',
+      dependencies: [
+        {
+          name: 'commentLikeRepository',
+          internal: CommentLikeRepository.name,
         },
         {
           name: 'commentRepository',

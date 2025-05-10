@@ -21,6 +21,8 @@ DomainErrorTranslator._directories = {
   'THREAD.NOT_MEET_DATA_TYPE_SPECIFICATION': new InvariantError('cannot create a new thread because the data types are incorrect'),
   'COMMENT.NOT_CONTAIN_NEEDED_PROPERTY': new InvariantError('cannot create a new comment because required properties are missing'),
   'COMMENT.NOT_MEET_DATA_TYPE_SPECIFICATION': new InvariantError('cannot create a new comment because the data types are incorrect'),
+  'COMMENT_LIKE.NOT_CONTAIN_NEEDED_PROPERTY': new InvariantError('cannot create a new like because required properties are missing'),
+  'COMMENT_LIKE.NOT_MEET_DATA_TYPE_SPECIFICATION': new InvariantError('cannot create a new like because the data types are incorrect'),
 };
 
 

@@ -11,7 +11,7 @@ const NotFoundError = require("../../../Commons/exceptions/NotFoundError");
 const {DatabaseError} = require("pg");
 
 
-describe('UserRepositoryPostgres', () => {
+describe('CommentRepositoryPostgres', () => {
     afterEach(async () => {
         await CommentsTableHelper.cleanTable();
         await ThreadsTableHelper.cleanTable();
@@ -186,6 +186,7 @@ describe('UserRepositoryPostgres', () => {
                 date: res[0].date,
                 is_deleted: false,
                 content: "Test comment",
+                like_count: "0"
             }])
 
         })
@@ -227,4 +228,40 @@ describe('UserRepositoryPostgres', () => {
         })
     })
 
+    describe('test verifyComment with invalid threadId', () => {
+        it('should correctly verify the owner.', async () => {
+            const fakeIdGenerator = () => '1248946454';
+            const commentPostgres = new CommentRepositoryPostgres(pool, fakeIdGenerator);
+
+            await expect(commentPostgres.verifyComment("comment-123", "thread-1234"))
+                .rejects.toBeInstanceOf(NotFoundError);
+
+            await UsersTableTestHelper.addUser({id:"user-123"})
+            await ThreadsTableHelper.addThread({id:"thread-123", owner: "user-123"})
+
+            await expect(commentPostgres.verifyComment("comment-123", "thread-123"))
+                .rejects.toBeInstanceOf(NotFoundError);
+
+            await CommentsTableHelper.addComment({id:"comment-123", owner: "user-123", threadId: "thread-123"})
+
+            await expect(commentPostgres.verifyComment("comment-1234", "thread-123"))
+                .rejects.toBeInstanceOf(NotFoundError);
+
+        })
+    })
+
+    describe('test verifyComment with correct value', () => {
+        it('should be ok.', async () => {
+            await UsersTableTestHelper.addUser({id:"user-123"})
+            await ThreadsTableHelper.addThread({id:"thread-123", owner: "user-123"})
+            await CommentsTableHelper.addComment({id:"comment-123", owner: "user-123", threadId: "thread-123"})
+
+
+            const fakeIdGenerator = () => '1248946454';
+            const commentPostgres = new CommentRepositoryPostgres(pool, fakeIdGenerator);
+
+            await expect(commentPostgres.verifyComment("comment-123", "thread-123")).resolves.not.toBeDefined();
+
+        })
+    })
 });

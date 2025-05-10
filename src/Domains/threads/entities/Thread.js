@@ -12,6 +12,7 @@ class Thread {
             username: comment.username,
             date: comment.date,
             content: !comment.is_deleted ? comment.content : "**komentar telah dihapus**",
+            likeCount: parseInt(comment.like_count),
         }));
     }
 // No need to run validation since the data will come from database, and might allowed to have null value in future.    

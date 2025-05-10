@@ -4,7 +4,7 @@ const OWNER_ID = "user-1234"
 const CommentsTableHelper = {
 
     async addComment({
-                  id = 'thread-123',  content = "Test content",
+                  id = 'comment-123',  content = "Test content",
                   owner = OWNER_ID, threadId
               }) {
         const query = {

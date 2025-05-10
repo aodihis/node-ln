@@ -23,9 +23,9 @@ describe('DeleteCommentUseCase', () => {
         const result = await deleteCommentUseCase.execute(deletedId, owner);
 
         // Assert
-        expect(mockCommentRepository.verifyCommentOwner).toHaveBeenCalledWith(deletedId, owner);
-        expect(mockCommentRepository.deleteComment).toHaveBeenCalledWith(deletedId);
+        expect(mockCommentRepository.verifyCommentOwner).toHaveBeenCalledWith("comment-123", "user-123");
+        expect(mockCommentRepository.deleteComment).toHaveBeenCalledWith("comment-123");
 
-        expect(result).toEqual(deletedId);
+        expect(result).toEqual("comment-123");
     });
 });
