@@ -7,7 +7,7 @@ const NewThread = require("../../../Domains/threads/entities/NewThread");
 const InvariantError = require('../../../Commons/exceptions/InvariantError');
 const { DatabaseError } = require('pg');
 
-describe('UserRepositoryPostgres', () => {
+describe('ThreadRepositoryPostgres', () => {
     afterEach(async () => {
         await ThreadsTableHelper.cleanTable();
         await UsersTableTestHelper.cleanTable();

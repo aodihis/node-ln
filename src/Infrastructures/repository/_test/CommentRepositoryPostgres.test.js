@@ -11,7 +11,7 @@ const NotFoundError = require("../../../Commons/exceptions/NotFoundError");
 const {DatabaseError} = require("pg");
 
 
-describe('UserRepositoryPostgres', () => {
+describe('CommentRepositoryPostgres', () => {
     afterEach(async () => {
         await CommentsTableHelper.cleanTable();
         await ThreadsTableHelper.cleanTable();
