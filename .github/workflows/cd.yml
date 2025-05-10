@@ -10,6 +10,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install
+
       - name: SSH and deploy app
         uses: appleboy/ssh-action@master
         with:
@@ -17,8 +28,6 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            mkdir -p /home/ubuntu/app
-            cd /home/ubuntu/app
             export HOST=${{ vars.HOST }}
             export PORT=${{ vars.PORT }}
             export PGHOST=${{ secrets.PGHOST }}
@@ -29,6 +38,17 @@ jobs:
             export ACCESS_TOKEN_KEY=${{ secrets.ACCESS_TOKEN_KEY }}
             export REFRESH_TOKEN_KEY=${{ secrets.REFRESH_TOKEN_KEY }}
             export ACCCESS_TOKEN_AGE=${{ vars.ACCCESS_TOKEN_AGE }}
+            
+            REPO_URL=git@github.com:aodihis/node-ln.git
+            APP_DIR=/home/ubuntu/app
+            
+            mkdir -p $APP_DIR
+            cd $APP_DIR
+            
+            if [ ! -d "$APP_DIR/.git" ]; then
+              git clone $REPO_URL $APP_DIR
+            fi
+            
             git pull origin main
             npm install
             npm run migrate up
