@@ -1,0 +1,35 @@
+name: CD
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: SSH and deploy app
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            mkdir -p /app
+            cd ~/app
+            export HOST=${{ vars.HOST }}
+            export PORT=${{ vars.PORT }}
+            export PGHOST=${{ secrets.PGHOST }}
+            export PGPORT=${{ vars.PGPORT }}
+            export PGUSER=${{ secrets.PGUSER }}
+            export PGDATABASE=${{ secrets.PGDATABASE }}
+            export PGPASSWORD=${{ secrets.PGPASSWORD }}
+            export ACCESS_TOKEN_KEY=${{ secrets.ACCESS_TOKEN_KEY }}
+            export REFRESH_TOKEN_KEY=${{ secrets.REFRESH_TOKEN_KEY }}
+            export ACCCESS_TOKEN_AGE=${{ vars.ACCCESS_TOKEN_AGE }}
+            git pull origin main
+            npm install
+            npm run migrate up
+            pm2 restart app
