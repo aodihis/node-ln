@@ -49,8 +49,20 @@ jobs:
             sleep 1
           done
 
-      - name: Run database migrations (if using node-pg-migrate)
+      - name: Generate test.json config
+        run: |
+          mkdir -p config/database
+          echo '{
+            "user": "'$PGUSER_TEST'",
+            "password": "'$PGPASSWORD_TEST'",
+            "host": "'$PGHOST_TEST'",
+            "port": '$PGPORT_TEST',
+            "database": "'$PGDATABASE_TEST'"
+          }' > config/database/test.json
+          cat config/database/test.json
+
+      - name: Run database migrations
         run: npm run migrate:test up
 
       - name: Run tests
-        run: npm run test
+        run: npm test
