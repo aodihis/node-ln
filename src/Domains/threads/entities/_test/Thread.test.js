@@ -13,7 +13,7 @@ describe('a Thread entities', () => {
             comments: [
                 { id: "comment-1234", username: "user1",
                     date: date, content: "Test Comment 1",
-                    is_deleted: false, like_count: 1
+                    is_deleted: false, like_count: 0
                 },
 
                 { id: "comment-1235", username: "user1",
