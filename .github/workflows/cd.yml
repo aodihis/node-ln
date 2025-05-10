@@ -18,7 +18,7 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             mkdir -p /home/ubuntu/app
-            cd ~/home/ubuntu/app
+            cd /home/ubuntu/app
             export HOST=${{ vars.HOST }}
             export PORT=${{ vars.PORT }}
             export PGHOST=${{ secrets.PGHOST }}
