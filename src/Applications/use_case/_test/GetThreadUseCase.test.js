@@ -8,15 +8,15 @@ describe('GetThreadUseCase', () => {
     it('should orchestrate the create comment action correctly', async () => {
         // Arrange
         const threadId = "thread-1234";
-
+        let date = new Date();
         const mockComments = [
             { id: "comment-1234", username: "user1",
-                date: new Date(), content: "Test Comment 1",
+                date: date, content: "Test Comment 1",
                 is_deleted: false
             },
 
             { id: "comment-1235", username: "user1",
-                date: new Date(), content: "Test Comment 2",
+                date: date, content: "Test Comment 2",
                 is_deleted: true
             },
         ];
@@ -24,7 +24,7 @@ describe('GetThreadUseCase', () => {
         const mockThread = {
             id: threadId,
             username: "user1",
-            date: new Date(),
+            date: date,
             title: "Test",
             body: "Test Thread 1",
         };
@@ -51,8 +51,22 @@ describe('GetThreadUseCase', () => {
 
         expect(result).toStrictEqual(
             new Thread({
-                ...mockThread,
-                comments: mockComments,
+                id: threadId,
+                username: "user1",
+                date: date,
+                title: "Test",
+                body: "Test Thread 1",
+                comments: [
+                    { id: "comment-1234", username: "user1",
+                        date: date, content: "Test Comment 1",
+                        is_deleted: false
+                    },
+
+                    { id: "comment-1235", username: "user1",
+                        date: date, content: "Test Comment 2",
+                        is_deleted: true
+                    },
+                ],
             })
         )
     });

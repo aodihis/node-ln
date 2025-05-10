@@ -1,12 +1,25 @@
 class AddedThread {
-    constructor(data) {
-        const { id, title, owner } = data;
+    constructor(payload) {
+        this._verifyPayload(payload);
+
+        const { id, title, owner } = payload;
 
         this.id = id;
         this.title = title;
         this.owner = owner;
     }
-// No need to run validation since the data will come from database, and might allowed to have null value in future.
+
+    _verifyPayload(payload) {
+        const { id, title, owner } = payload;
+
+        if (!id || !title || !owner) {
+            throw new Error('ADDED_THREAD.NOT_CONTAIN_NEEDED_PROPERTY');
+        }
+
+        if (typeof id !== 'string' || typeof title !== 'string' || typeof owner !== 'string') {
+            throw new Error('ADDED_THREAD.NOT_MEET_DATA_TYPE_SPECIFICATION');
+        }
+    }
 }
 
 module.exports = AddedThread;

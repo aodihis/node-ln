@@ -1,21 +1,42 @@
 const AddedComment = require('../AddedComment');
 
-describe('a AddedComment entities', () => {
-    it('should create thread object correctly', () => {
+describe('an AddedComment entity', () => {
+    it('should throw error when payload not contain needed property', () => {
+
+        const payload = {
+            content: 'comment',
+            owner: 'user-123',
+        };
+
+        expect(() => new AddedComment(payload)).toThrowError('ADDED_COMMENT.NOT_CONTAIN_NEEDED_PROPERTY');
+
+    });
+
+    it('does not meet requirement', () => {
+        const payload = {
+            id: 'comment-123',
+            content: 'comment',
+            owner: 1,
+        };
+
+        expect(() => new AddedComment(payload)).toThrowError('ADDED_COMMENT.NOT_MEET_DATA_TYPE_SPECIFICATION');
+    });
+
+    it('normal case', () => {
         // Arrange
-        const owner = "user-8787";
-        const data = {
-            content: 'Test',
-            id: 'user-2134',
-            owner: owner,
+        const payload = {
+            id: 'comment-123',
+            content: 'comment',
+            owner: 'user-123',
         };
 
         // Action
-        const comment = new AddedComment(data);
+        const addedComment = new AddedComment(payload);
 
         // Assert
-        expect(comment.id).toEqual(data.id);
-        expect(comment.content).toEqual(data.content);
-        expect(comment.owner).toEqual(data.owner);
-    })
+        expect(addedComment).toBeInstanceOf(AddedComment);
+        expect(addedComment.id).toEqual(payload.id);
+        expect(addedComment.content).toEqual(payload.content);
+        expect(addedComment.owner).toEqual(payload.owner);
+    });
 });
