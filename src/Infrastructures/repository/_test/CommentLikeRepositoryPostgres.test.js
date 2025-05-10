@@ -8,6 +8,7 @@ const CommentLike = require("../../../Domains/comment_likes/entities/CommentLike
 const InvariantError = require('../../../Commons/exceptions/InvariantError');
 const {DatabaseError} = require("pg");
 const assert = require("node:assert");
+const NotFoundError = require("../../../Commons/exceptions/NotFoundError");
 
 
 describe('CommentLikeRepositoryPostgres', () => {
@@ -32,11 +33,11 @@ describe('CommentLikeRepositoryPostgres', () => {
 
             const commentLikePg = new CommentLikeRepositoryPostgres(pool);
 
-            await expect(commentLikePg.likeOrDislike(data)).rejects.toBeInstanceOf(InvariantError);
+            await expect(commentLikePg.likeOrDislike(data)).rejects.toBeInstanceOf(NotFoundError);
 
             await UsersTableTestHelper.addUser({id: "user-123"})
 
-            await expect(commentLikePg.likeOrDislike(data)).rejects.toBeInstanceOf(InvariantError);
+            await expect(commentLikePg.likeOrDislike(data)).rejects.toBeInstanceOf(NotFoundError);
 
             await ThreadsTableHelper.addThread({id: "thread-123", owner: "user-123"})
             await CommentsTableHelper.addComment({id: "comment-123", owner: "user-123", threadId:"thread-123"});
@@ -46,7 +47,7 @@ describe('CommentLikeRepositoryPostgres', () => {
                 commentId: "comment-123",
             })
 
-            await expect(commentLikePg.likeOrDislike(data2)).rejects.toBeInstanceOf(InvariantError);
+            await expect(commentLikePg.likeOrDislike(data2)).rejects.toBeInstanceOf(NotFoundError);
         });
 
         it('normal flow', async () => {
