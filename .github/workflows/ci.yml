@@ -29,6 +29,9 @@ jobs:
       PGDATABASE_TEST: testdb
       PGPASSWORD_TEST: password
       PGPORT_TEST: 5432
+      ACCESS_TOKEN_KEY: b2c49f59e9400d0a3e59126c93cd5c1cbf1c33cbd0736d68e8fa432cc87899ec
+      REFRESH_TOKEN_KEY: 23fd934e4dfe0995a45fd0e98e31d397ee7e3b0e81dfbb9fa4e223fe4deffb1a
+      ACCCESS_TOKEN_AGE: 3000
 
     steps:
       - name: Checkout repository
