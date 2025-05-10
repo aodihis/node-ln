@@ -10,11 +10,11 @@ class CommentLikesHandler {
 
 
   async likeDislikeHandler(request, h) {
-    const { commentId } = request.params;
+    const { threadId, commentId } = request.params;
     const {id: userId} = request.auth.credentials;
     const commentLikeUseCase = this._container.getInstance(CommentLikeUseCase.name);
 
-    await commentLikeUseCase.execute(userId, commentId);
+    await commentLikeUseCase.execute(threadId, commentId, userId);
 
     return {
       status: 'success',

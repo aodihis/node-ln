@@ -22,7 +22,7 @@ class CommentRepositoryPostgres extends CommentRepository {
 
         try {
             const result = await this._pool.query(query);
-            return new AddedComment({ ...result.rows[0] });
+            return new AddedComment({...result.rows[0]});
         } catch (error) {
             if (error.code === '23503') { // foreign_key_violation
                 throw new NotFoundError(`Thread with ID ${threadId} not found`);
@@ -50,14 +50,26 @@ class CommentRepositoryPostgres extends CommentRepository {
 
         const commentsQuery = {
             text: `
-                SELECT comments.id as id, users.username as username, comments.created_at as date, comments.content as content, 
-                comments.is_deleted as is_deleted
+                SELECT 
+                  comments.id AS id,
+                  users.username AS username,
+                  comments.created_at AS date,
+                  comments.content AS content,
+                  comments.is_deleted AS is_deleted,
+                  COALESCE(likes.like_count, 0) AS like_count
                 FROM comments
                 LEFT JOIN users ON comments.owner = users.id
+                LEFT JOIN (
+                  SELECT comment_id, COUNT(*) AS like_count
+                  FROM comment_likes
+                  GROUP BY comment_id
+                ) AS likes ON comments.id = likes.comment_id
                 WHERE comments.thread_id = $1
-            `,
+                ORDER BY comments.created_at
+              ` ,
             values: [threadId],
         };
+
 
         const comments = await this._pool.query(commentsQuery);
         return comments.rows;
@@ -76,6 +88,19 @@ class CommentRepositoryPostgres extends CommentRepository {
         }
         if (result.rows[0].owner !== owner) {
             throw new AuthorizationError("Not authorized to delete this comment");
+        }
+    }
+
+    async verifyComment(id, threadId) {
+        const query = {
+            text: 'SELECT id FROM comments WHERE id = $1 AND thread_id = $2',
+            values: [id, threadId]
+        }
+
+        const result = await this._pool.query(query);
+
+        if (!result.rows.length) {
+            throw new NotFoundError("No comments found.");
         }
     }
 }

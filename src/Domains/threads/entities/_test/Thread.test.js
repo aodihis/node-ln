@@ -13,12 +13,12 @@ describe('a Thread entities', () => {
             comments: [
                 { id: "comment-1234", username: "user1",
                     date: date, content: "Test Comment 1",
-                    is_deleted: false
+                    is_deleted: false, likeCount: 0
                 },
 
                 { id: "comment-1235", username: "user1",
                     date: date, content: "Test Comment 2",
-                    is_deleted: true
+                    is_deleted: true, likeCount: 10
                 },
             ]
         };
@@ -34,11 +34,11 @@ describe('a Thread entities', () => {
         expect(thread.date).toEqual(data.date);
         expect(thread.comments).toStrictEqual([
             { id: "comment-1234", username: "user1",
-                date: date, content: "Test Comment 1",
+                date: date, content: "Test Comment 1", likeCount: 0
             },
 
             { id: "comment-1235", username: "user1",
-                date: date, content: "**komentar telah dihapus**",
+                date: date, content: "**komentar telah dihapus**", likeCount: 10
             },
         ]);
     });

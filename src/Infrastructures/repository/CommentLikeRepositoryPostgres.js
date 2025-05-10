@@ -1,5 +1,6 @@
 const CommentLikeRepository = require('../../Domains/comment_likes/CommentLikeRepository');
-const InvariantError = require("../../Commons/exceptions/InvariantError");
+const InvariantError = require("../../Commons/exceptions/NotFoundError");
+const NotFoundError = require("../../Commons/exceptions/NotFoundError");
 
 class CommentLikeRepositoryPostgres extends CommentLikeRepository {
     constructor(pool) {
@@ -33,7 +34,7 @@ class CommentLikeRepositoryPostgres extends CommentLikeRepository {
                 } else if (userError) {
                     throw new InvariantError("Invalid user");
                 } else {
-                    throw new InvariantError('Invalid comment');
+                    throw new NotFoundError('Invalid comment');
                 }
             }
         }
