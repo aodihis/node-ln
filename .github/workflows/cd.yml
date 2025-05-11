@@ -26,7 +26,7 @@ jobs:
             export PGPASSWORD=${{ secrets.PGPASSWORD }}
             export ACCESS_TOKEN_KEY=${{ secrets.ACCESS_TOKEN_KEY }}
             export REFRESH_TOKEN_KEY=${{ secrets.REFRESH_TOKEN_KEY }}
-            export ACCCESS_TOKEN_AGE=${{ vars.ACCCESS_TOKEN_AGE }}
+            export ACCESS_TOKEN_AGE=${{ vars.ACCESS_TOKEN_AGE }}
             
             REPO_URL=git@github.com:aodihis/node-ln.git
             APP_DIR=/home/ubuntu/app
@@ -38,6 +38,7 @@ jobs:
               git clone $REPO_URL $APP_DIR
             fi
             echo $PGHOST
+            echo $ACCESS_TOKEN_AGE
             git pull origin main
             npm install
             npm run migrate up
