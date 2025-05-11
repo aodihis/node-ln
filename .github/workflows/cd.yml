@@ -41,5 +41,7 @@ jobs:
             echo $ACCESS_TOKEN_AGE
             git pull origin main
             npm install
-            npm run migrate up
+            
+            CONNECTION_STRING="postgres://${PGUSER}:${PGPASSWORD}@${PGHOST}:${PGPORT}/${PGDATABASE}"
+            npm run migrate up -d "$CONNECTION_STRING"
             pm2 restart app
