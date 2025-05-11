@@ -42,6 +42,6 @@ jobs:
             git pull origin main
             npm install
             
-            CONNECTION_STRING="postgres://${PGUSER}:${PGPASSWORD}@${PGHOST}:${PGPORT}/${PGDATABASE}"
-            npm run migrate up -d "$CONNECTION_STRING"
+            export DATABASE_URL="postgres://${PGUSER}:${PGPASSWORD}@${PGHOST}:${PGPORT}/${PGDATABASE}"
+            npm run migrate up
             pm2 restart app
