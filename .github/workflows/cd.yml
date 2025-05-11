@@ -43,6 +43,7 @@ jobs:
             echo "ACCESS_TOKEN_KEY=${{ secrets.ACCESS_TOKEN_KEY }}" >> .env
             echo "REFRESH_TOKEN_KEY=${{ secrets.REFRESH_TOKEN_KEY }}" >> .env
             echo "ACCESS_TOKEN_AGE=${{ vars.ACCESS_TOKEN_AGE }}" >> .env
+            echo "PGSSLMODE=require" >> .env
             
             npm run migrate up
             pm2 restart app
