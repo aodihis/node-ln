@@ -19,7 +19,7 @@ jobs:
           script: |
             export HOST=${{ vars.HOST }}
             export PORT=${{ vars.PORT }}
-            export PGHOST=${{ vars.PGHOST }}
+            export PGHOST=${{ secrets.PGHOST }}
             export PGPORT=${{ vars.PGPORT }}
             export PGUSER=${{ secrets.PGUSER }}
             export PGDATABASE=${{ secrets.PGDATABASE }}
@@ -42,5 +42,5 @@ jobs:
             git pull origin main
             npm install
             
-            DATABASE_URL=postgres://test:test@localhost:5432/test npm run migrate up
+            DATABASE_URL="postgres://${PGUSER}:${PGPASSWORD}@${PGHOST}:${PGPORT}/${PGDATABASE}" npm run migrate up
             pm2 restart app
