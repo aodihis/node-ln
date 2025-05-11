@@ -17,16 +17,7 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            export HOST=${{ vars.HOST }}
-            export PORT=${{ vars.PORT }}
-            export PGHOST=${{ secrets.PGHOST }}
-            export PGPORT=${{ vars.PGPORT }}
-            export PGUSER=${{ secrets.PGUSER }}
-            export PGDATABASE=${{ secrets.PGDATABASE }}
-            export PGPASSWORD=${{ secrets.PGPASSWORD }}
-            export ACCESS_TOKEN_KEY=${{ secrets.ACCESS_TOKEN_KEY }}
-            export REFRESH_TOKEN_KEY=${{ secrets.REFRESH_TOKEN_KEY }}
-            export ACCESS_TOKEN_AGE=${{ vars.ACCESS_TOKEN_AGE }}
+
             
             REPO_URL=git@github.com:aodihis/node-ln.git
             APP_DIR=/home/ubuntu/app
@@ -42,5 +33,16 @@ jobs:
             git pull origin main
             npm install
             
-            DATABASE_URL="postgres://${PGUSER}:${PGPASSWORD}@${PGHOST}:${PGPORT}/${PGDATABASE}" npm run migrate up
+            echo "HOST=${{ vars.HOST }}" >> .env
+            echo "PORT=${{ vars.PORT }}" >> .env
+            echo "PGHOST=${{ secrets.PGHOST }}" >> .env
+            echo "PGPORT=${{ vars.PGPORT }}" >> .env
+            echo "PGUSER=${{ secrets.PGUSER }}" >> .env
+            echo "PGDATABASE=${{ secrets.PGDATABASE }}" >> .env
+            echo "PGPASSWORD=${{ secrets.PGPASSWORD }}" >> .env
+            echo "ACCESS_TOKEN_KEY=${{ secrets.ACCESS_TOKEN_KEY }}" >> .env
+            echo "REFRESH_TOKEN_KEY=${{ secrets.REFRESH_TOKEN_KEY }}" >> .env
+            echo "ACCESS_TOKEN_AGE=${{ vars.ACCESS_TOKEN_AGE }}" >> .env
+            
+            npm run migrate up
             pm2 restart app
