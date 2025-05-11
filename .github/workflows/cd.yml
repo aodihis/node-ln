@@ -45,4 +45,4 @@ jobs:
             export ACCESS_TOKEN_AGE=${{ vars.ACCESS_TOKEN_AGE }}
             
             npm run migrate up
-            pm2 restart app
+            pm2 restart forum-api
