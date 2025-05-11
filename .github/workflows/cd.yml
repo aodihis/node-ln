@@ -45,7 +45,7 @@ jobs:
             export ACCESS_TOKEN_AGE=${{ vars.ACCESS_TOKEN_AGE }}
             
             npm run migrate up
-            pm2 start "npm run start" --name forum-api || pm2 restart forum-api
+            pm2 restart forum-api || pm2 start "npm run start" --name forum-api 
             
             sudo cp nginx.conf /etc/nginx/sites-available/forum-api.conf
             sudo ln -sf /etc/nginx/sites-available/forum-api.conf /etc/nginx/sites-enabled/forum-api.conf
