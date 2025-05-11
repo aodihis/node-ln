@@ -19,7 +19,7 @@ jobs:
           script: |
             export HOST=${{ vars.HOST }}
             export PORT=${{ vars.PORT }}
-            export PGHOST=${{ secrets.PGHOST }}
+            export PGHOST=${{ vars.PGHOST }}
             export PGPORT=${{ vars.PGPORT }}
             export PGUSER=${{ secrets.PGUSER }}
             export PGDATABASE=${{ secrets.PGDATABASE }}
