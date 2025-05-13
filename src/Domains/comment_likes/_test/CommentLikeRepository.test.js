@@ -6,6 +6,6 @@ describe('CommentLikeRepository interface', () => {
         const commentLikeRepository = new CommentLikeRepository();
 
         // Action & Assert
-        await expect(commentLikeRepository.like_or_dislike({})).rejects.toThrowError('COMMENT_LIKE_REPOSITORY.METHOD_NOT_IMPLEMENTED');
+        await expect(commentLikeRepository.likeOrDislike({})).rejects.toThrowError('COMMENT_LIKE_REPOSITORY.METHOD_NOT_IMPLEMENTED');
     });
 });

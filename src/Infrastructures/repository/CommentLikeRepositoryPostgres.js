@@ -26,15 +26,12 @@ class CommentLikeRepositoryPostgres extends CommentLikeRepository {
             `, [userId, commentId]);
         } catch (err) {
             if (err.code === '23503') {
-                const userError = err.detail.includes('user_id');
                 const commentError = err.detail.includes('comment_id');
 
-                if (commentError && userError) {
-                    throw new InvariantError("Invalid user and comment.");
-                } else if (userError) {
-                    throw new InvariantError("Invalid user");
+                 if (commentError) {
+                    throw new InvariantError("Invalid comment");
                 } else {
-                    throw new NotFoundError('Invalid comment');
+                    throw new NotFoundError('Invalid user');
                 }
             }
         }

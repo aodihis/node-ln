@@ -41,7 +41,11 @@ describe('AddCommentUseCase', () => {
         const result = await createCommentUseCase.execute(useCasePayload);
 
         // Assert
-        expect(mockCommentRepository.create).toHaveBeenCalledWith(useCasePayload);
+        expect(mockCommentRepository.create).toHaveBeenCalledWith(new NewComment({
+            content: 'Sample Content',
+            threadId: 'thread-123',
+            owner: 'user-123',
+        }));
         expect(result).toEqual(mockAddedComment)
     });
 });

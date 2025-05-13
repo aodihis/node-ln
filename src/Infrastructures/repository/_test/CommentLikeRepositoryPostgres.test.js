@@ -23,7 +23,7 @@ describe('CommentLikeRepositoryPostgres', () => {
         await pool.end();
     });
 
-    describe('create with invalid threadId', () => {
+    describe('create with invalid params', () => {
         it('should return not found.', async () => {
 
             const data = new CommentLike({

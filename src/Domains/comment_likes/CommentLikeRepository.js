@@ -1,5 +1,5 @@
 class CommentLikeRepository {
-    async like_or_dislike(like) {
+    async likeOrDislike(like) {
         throw new Error('COMMENT_LIKE_REPOSITORY.METHOD_NOT_IMPLEMENTED');
     }
 }

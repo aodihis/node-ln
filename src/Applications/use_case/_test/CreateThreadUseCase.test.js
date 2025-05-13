@@ -40,7 +40,11 @@ describe('CreateThreadUseCase', () => {
         const result = await createThreadUseCase.execute(useCasePayload);
 
         // Assert
-        expect(mockThreadRepository.create).toHaveBeenCalledWith(useCasePayload);
+        expect(mockThreadRepository.create).toHaveBeenCalledWith(new NewThread({
+            title: 'Sample Thread',
+            body: 'This is a sample body',
+            owner: 'user-123'
+        }));
         expect(result).toEqual(mockAddedThread);
     });
 });
